@@ -16,3 +16,18 @@ type VideoResponse struct {
 	Data    []VideoItem `json:"data,omitempty"`
 	Message string      `json:"message,omitempty"`
 }
+
+// cursor pagination model
+type PaginatedVideos struct {
+	Videos     []VideoItem `json:"videos"`
+	HasNext    bool        `json:"hasNext"`
+	NextCursor string      `json:"nextCursor,omitempty"`
+	TotalCount int64       `json:"totalCount"`
+}
+
+type PaginationQuery struct {
+	Cursor    string
+	Limit     int64
+	SortField string
+	SortOrder string
+}

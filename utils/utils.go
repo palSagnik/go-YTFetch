@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 
 	"github.com/palSagnik/go-YTFetch.git/models"
@@ -44,4 +45,17 @@ func SearchYoutubevideos(apiKey string, query string, publishedAfter string, max
 	}
 
 	return videos, nil
+}
+
+func EncodeCursor(value interface{}) string {
+	return base64.StdEncoding.EncodeToString([]byte(fmt.Sprintf("%v", value)))
+}
+
+func DecodeCursor(cursor string) (string, error) {
+	decoded, err := base64.StdEncoding.DecodeString(cursor)
+	if err != nil {
+		return "", err
+	}
+
+	return string(decoded), nil
 }
