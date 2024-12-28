@@ -1,4 +1,4 @@
-# YouTube Video Fetcher API
+# go-YTFetch
 
 A Go-based REST API service that fetches and stores YouTube videos based on search queries. The service implements cursor-based pagination and efficient API key rotation.
 
@@ -28,8 +28,8 @@ A Go-based REST API service that fetches and stores YouTube videos based on sear
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/youtube-video-fetcher
-cd youtube-video-fetcher
+git clone https://github.com/palSagnik/go-YTFetch.git
+cd go-YTFetch
 ```
 
 2. Install dependencies:
