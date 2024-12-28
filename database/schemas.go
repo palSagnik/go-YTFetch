@@ -29,9 +29,32 @@ func createTables(db *sql.DB) error {
 	return nil
 }
 
+func createIndexes(db *sql.DB) error {
+    
+	// made a slice of strings for indexes
+	// in future if there is requirement for multiple indexes
+	queries := []string{
+        `CREATE INDEX IF NOT EXISTS idx_videos_published_at ON videos(published_at)`,
+    }
+
+    for _, query := range queries {
+        _, err := db.Exec(query)
+        if err != nil {
+            return err
+        }
+    }
+
+    return nil
+}
+
 func MigrateUp() error {
 	
 	err := createTables(DB)
+	if err != nil {
+		return err
+	}
+
+	err = createIndexes(DB)
 	if err != nil {
 		return err
 	}
