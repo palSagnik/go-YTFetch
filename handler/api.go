@@ -81,3 +81,45 @@ func YTFetchApi(c *gin.Context) {
 		Status: "success",
 	})
 }
+
+// querying database for videos
+func GetVideos(c *gin.Context) {
+
+	// taking query parameters
+	// setting limit default value
+	limit := int64(config.DEFAULT_PAGINATION_LIMIT)
+	if limitStr := c.Query("limit"); limitStr != "" {
+		var err error
+		limit, err = strconv.ParseInt(limitStr, 10, 64)
+		if err != nil || limit <= 0 {
+			c.JSON(http.StatusBadRequest, models.VideoResponse{
+                Status:  "error",
+                Message: "invalid limit parameter",
+            })
+            return
+		}
+	}
+
+	sortField := c.Query("field")
+	SortOrder := c.Query("order")
+	
+	paginationQuery := models.PaginationQuery{
+		Limit: limit,
+		SortField: sortField,
+		SortOrder: SortOrder,
+	}
+
+	paginatedVideos, err := database.QueryVideosWithCursor(c, paginationQuery)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, models.VideoResponse{
+			Status: "error",
+			Message: "error in querying database: " + err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, models.VideoResponse{
+		Status: "success",
+		Data: paginatedVideos.Videos,
+	})
+}

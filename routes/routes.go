@@ -10,6 +10,7 @@ func SetUpRoutes(r *gin.Engine) {
 	api := r.Group("/api")
 	{
 		api.GET("/fetch", handler.YTFetchApi)
+		api.GET("/getVideos", handler.GetVideos)
 	}
 
 }
