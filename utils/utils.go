@@ -1,0 +1,47 @@
+package utils
+
+import (
+	"context"
+	"fmt"
+
+	"github.com/palSagnik/go-YTFetch.git/models"
+	"google.golang.org/api/option"
+	"google.golang.org/api/youtube/v3"
+)
+
+func SearchYoutubevideos(apiKey string, query string, publishedAfter string, maxResults int64) ([]models.VideoItem, error) {
+
+	ctx := context.Background()
+	youtube, err := youtube.NewService(ctx, option.WithAPIKey(apiKey))
+	if err != nil {
+		return nil, fmt.Errorf("error creating YouTube client: %v", err)
+	}
+
+	// creating the search call
+	call := youtube.Search.List([]string{"id", "snippet"}).
+		Q(query).
+		MaxResults(maxResults).
+		Order("date").
+		Type("video")
+
+	// executing the search call
+	resp, err := call.Do()
+	if err != nil {
+		return nil, fmt.Errorf("error executing search: %v", err)
+	}
+
+	var videos []models.VideoItem
+	for _, item := range resp.Items {
+		video := models.VideoItem{
+			Title:        item.Snippet.Title,
+			ID:           item.Id.VideoId,
+			Description:  item.Snippet.Description,
+			PublishedAt:  item.Snippet.PublishedAt,
+			ChannelTitle: item.Snippet.ChannelTitle,
+			ThumbnailURL: item.Snippet.Thumbnails.Default.Url,
+		}
+		videos = append(videos, video)
+	}
+
+	return videos, nil
+}
