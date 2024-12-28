@@ -40,11 +40,9 @@ func YTFetchApi(c *gin.Context) {
 	
 	publishedAfter := c.Query("published_after")
 	if publishedAfter == "" {
-		c.JSON(http.StatusBadRequest, models.VideoResponse{
-			Status: "error",
-			Message: "request parameter 'published_after' is required",
-		})
+		publishedAfter = config.DEFAULT_PUBLISHED_AFTER
 	}
+
 
 
 	// calling the search function with params
@@ -87,7 +85,7 @@ func GetVideos(c *gin.Context) {
 
 	// taking query parameters
 	// setting limit default value
-	limit := int64(config.DEFAULT_PAGINATION_LIMIT)
+	limit := int64(config.DEFAULT_PAGE_LIMIT)
 	if limitStr := c.Query("limit"); limitStr != "" {
 		var err error
 		limit, err = strconv.ParseInt(limitStr, 10, 64)
@@ -102,11 +100,13 @@ func GetVideos(c *gin.Context) {
 
 	sortField := c.Query("field")
 	SortOrder := c.Query("order")
+	nextCursor := c.Query("next_cursor")
 	
 	paginationQuery := models.PaginationQuery{
 		Limit: limit,
 		SortField: sortField,
 		SortOrder: SortOrder,
+		NextCursor: nextCursor,
 	}
 
 	paginatedVideos, err := database.QueryVideosWithCursor(c, paginationQuery)
@@ -121,5 +121,10 @@ func GetVideos(c *gin.Context) {
 	c.JSON(http.StatusOK, models.VideoResponse{
 		Status: "success",
 		Data: paginatedVideos.Videos,
+		Pagination: models.PaginationInfo{
+			HasNext: paginatedVideos.HasNext,
+			NextCursor: paginatedVideos.NextCursor,
+			TotalCount: paginatedVideos.TotalCount,
+		},
 	})
 }

@@ -23,8 +23,9 @@ func SearchYoutubevideos(apiKey string, query string, publishedAfter string, max
 		Q(query).
 		MaxResults(maxResults).
 		Order("date").
-		Type("video")
-
+		Type("video").
+		PublishedAfter(publishedAfter)
+		
 	// executing the search call
 	resp, err := call.Do()
 	if err != nil {

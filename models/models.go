@@ -12,9 +12,10 @@ type VideoItem struct {
 
 // api response model
 type VideoResponse struct {
-	Status  string      `json:"status"`
-	Data    []VideoItem `json:"data,omitempty"`
-	Message string      `json:"message,omitempty"`
+	Status     string         `json:"status"`
+	Data       []VideoItem    `json:"data,omitempty"`
+	Message    string         `json:"message,omitempty"`
+	Pagination PaginationInfo `json:"pagination,omitempty"`
 }
 
 // cursor pagination model
@@ -26,8 +27,14 @@ type PaginatedVideos struct {
 }
 
 type PaginationQuery struct {
-	Cursor    string
-	Limit     int64
-	SortField string
-	SortOrder string
+	NextCursor string
+	Limit      int64
+	SortField  string
+	SortOrder  string
+}
+
+type PaginationInfo struct {
+	HasNext    bool        `json:"hasNext"`
+	NextCursor string      `json:"nextCursor,omitempty"`
+	TotalCount int64       `json:"totalCount"`
 }

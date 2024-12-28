@@ -87,8 +87,8 @@ func QueryVideosWithCursor(c *gin.Context, query models.PaginationQuery) (*model
 	// cursor condition if provided
 	var args []interface{}
 	whereClause := ""
-	if query.Cursor != "" {
-		decodedCursor, err := utils.DecodeCursor(query.Cursor)
+	if query.NextCursor != "" {
+		decodedCursor, err := utils.DecodeCursor(query.NextCursor)
 		if err != nil {
 			return nil, fmt.Errorf("invalid cursor: %v", err)
 		}
