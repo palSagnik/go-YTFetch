@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/gin-gonic/gin"
+	"github.com/palSagnik/go-YTFetch.git/config"
 	"github.com/palSagnik/go-YTFetch.git/database"
+	"github.com/palSagnik/go-YTFetch.git/routes"
 )
 
 func main() {
@@ -24,4 +27,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	r := gin.Default()
+    routes.SetUpRoutes(r)
+    
+	port := fmt.Sprintf(":%d", config.APP_PORT)
+    r.Run(port)
 }
