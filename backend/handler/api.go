@@ -26,7 +26,7 @@ func YTFetchApi(c *gin.Context) {
 
 	// default value for maxresult if no parameter is provided
 	maxResults := int64(config.DEFAULT_VIDEO_FETCH_LIMIT) 
-	if maxStr := c.Query("maxresults"); maxStr != "" {
+	if maxStr := c.Query("max_results"); maxStr != "" {
 		var err error
 		maxResults, err = strconv.ParseInt(maxStr, 10, 64)
 		if err != nil || maxResults <= 0 {
