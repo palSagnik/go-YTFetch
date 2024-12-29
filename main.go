@@ -9,6 +9,7 @@ import (
 	"github.com/palSagnik/go-YTFetch.git/backend/config"
 	"github.com/palSagnik/go-YTFetch.git/backend/database"
 	"github.com/palSagnik/go-YTFetch.git/backend/routes"
+	"github.com/palSagnik/go-YTFetch.git/cron"
 )
 
 func main() {
@@ -40,6 +41,11 @@ func main() {
         MaxAge:          12 * time.Hour,
     }
 	
+	// running cronjob concurrently
+	go func() {
+		cron.FetchingCronJob()
+	}()
+
 	r := gin.Default()
 	r.Use(cors.New(corsConfig))
     routes.SetUpRoutes(r)
