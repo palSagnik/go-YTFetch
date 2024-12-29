@@ -74,7 +74,7 @@ scripts/run.sh
 
 ### Get Videos
 ```
-GET /api/videos
+GET /api/getVideos
 ```
 
 Query Parameters:
@@ -111,45 +111,71 @@ Response:
 ```
 go-YTFetch/
 ├── README.md
-├── config
-│   ├── db.go
-│   └── general.go
+├── backend
+│   ├── Dockerfile
+│   ├── config
+│   │   ├── db.go
+│   │   └── general.go
+│   ├── database
+│   │   ├── database.go
+│   │   ├── queries.go
+│   │   └── schemas.go
+│   ├── handler
+│   │   └── api.go
+│   ├── models
+│   │   └── models.go
+│   ├── routes
+│   │   └── routes.go
+│   └── utils
+│       └── utils.go
+├── compose.yml
 ├── cron
+│   ├── Dockerfile
 │   └── cron.go
-├── database
-│   ├── database.go
-│   ├── queries.go
-│   └── schemas.go
+├── frontend
+│   ├── eslint.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public
+│   │   └── vite.svg
+│   ├── src
+│   │   ├── App.css
+│   │   ├── App.tsx
+│   │   ├── assets
+│   │   │   └── react.svg
+│   │   ├── components
+│   │   │   ├── VideoList.tsx
+│   │   │   └── ui
+│   │   │       ├── button.tsx
+│   │   │       └── card.tsx
+│   │   ├── index.css
+│   │   ├── main.tsx
+│   │   ├── types.ts
+│   │   └── vite-env.d.ts
+│   ├── tailwind.config.js
+│   ├── tsconfig.app.json
+│   ├── tsconfig.json
+│   ├── tsconfig.node.json
+│   └── vite.config.ts
 ├── go.mod
 ├── go.sum
-├── handler
-│   └── api.go
 ├── main.go
-├── models
-│   └── models.go
-├── routes
-│   └── routes.go
-├── scripts
-│   └── run.sh
-├── test
-└── utils
-    └── utils.go
+└── scripts
+    ├── init.sh
+    ├── reset.sh
+    └── run.sh
 ```
 
-## Key Components
+## Design Choices
 
-### API Key Manager
-The service implements a round-robin algorithm for rotating YouTube API keys:
-```go
-keyManager, err := utils.NewAPIKeyManager([]string{
-    os.Getenv("YOUTUBE_API_KEY_1"),
-    os.Getenv("YOUTUBE_API_KEY_2"),
-    os.Getenv("YOUTUBE_API_KEY_3"),
-})
-```
-
-### Cursor-based Pagination
-Efficient pagination implementation using cursors instead of offset:
+### Cursor-Based Pagination
+- Chosen over offset pagination due to better performance with large datasets
+- Prevents the "skipping rows" problem when data is added/removed between pages
+- More efficient for our use case where we're mostly showing recent videos
+- Handles concurrent updates better than offset pagination
+- Better memory utilization on database queries
 ```go
 videos, err := database.QueryVideosWithCursor(c, models.PaginationQuery{
     Limit:      10,
@@ -157,15 +183,26 @@ videos, err := database.QueryVideosWithCursor(c, models.PaginationQuery{
 })
 ```
 
-## Error Handling
-
-The API returns structured error responses:
-```json
-{
-    "status": "error",
-    "message": "error description"
-}
+### API Key Rotation
+- Round-robin implementation based on quota chosen for reliability
+- Thread-safe implementation using mutex
+```go
+keyManager, err := utils.NewAPIKeyManager([]string{
+    os.Getenv("YOUTUBE_API_KEY_1"),
+    os.Getenv("YOUTUBE_API_KEY_2"),
+    os.Getenv("YOUTUBE_API_KEY_3"),
+})
 ```
+### Frontend Architecture
+- React with TypeScript for type safety
+- Tailwind CSS for utility-first styling
+- Grid layout for better mobile experience
+
+### Database Schema
+- Optimized indexes for common query patterns
+- Timestamp fields for better data tracking
+- Constraint choices to maintain data integrity
+
 
 ## License
 
