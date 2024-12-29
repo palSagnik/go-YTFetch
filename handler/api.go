@@ -43,10 +43,16 @@ func YTFetchApi(c *gin.Context) {
 		publishedAfter = config.DEFAULT_PUBLISHED_AFTER
 	}
 
-
+	// apikey parameter for rotation
+	// if apikey not provided default to APIKEY_3
+	// using 3 here due to shortage of apikeys
+	apiKey := c.Query("api_key")
+	if apiKey == "" {
+		apiKey = config.YOUTUBE_APIKEY_3
+	}
 
 	// calling the search function with params
-	videos, err := utils.SearchYoutubevideos(config.YOUTUBE_APIKEY, query, publishedAfter, maxResults)
+	videos, err := utils.SearchYoutubevideos(apiKey, query, publishedAfter, maxResults)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.VideoResponse{
 			Status: "error",
@@ -55,19 +61,7 @@ func YTFetchApi(c *gin.Context) {
 		return
 	}
 
-	var videoItems []models.VideoItem
-	for _, video := range videos{
-		videoItems = append(videoItems, models.VideoItem{
-			ID: video.ID,
-			Title: video.Title,
-			Description: video.Description,
-			PublishedAt: video.PublishedAt,
-			ChannelTitle: video.ChannelTitle,
-			ThumbnailURL: video.ThumbnailURL,
-		})
-	}
-
-	if err := database.InsertVideoDetails(c, videoItems); err != nil {
+	if err := database.InsertVideoDetails(c, videos); err != nil {
 		c.JSON(http.StatusInternalServerError, models.VideoResponse{
 			Status: "error",
 			Message: "failed to store videos in database: " + err.Error(),
