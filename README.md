@@ -72,6 +72,7 @@ YOUTUBE_API_KEY_3=your_third_api_key
 PORT=8080
 ```
 
+Comment the cronjob `time.Sleep(500 * time.Hour)` for the cronjob to run or else you can populate the database calling `/api/fetch?query=<SOME_KEYWORD>`
 
 ## Running the Application
 
