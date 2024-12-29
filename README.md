@@ -1,6 +1,6 @@
 # go-YTFetch
 
-A Go-based REST API service that fetches and stores YouTube videos based on search queries. The service implements cursor-based pagination and efficient API key rotation.
+A Go-based REST API service that fetches and stores YouTube videos based on search queries. The service implements cursor-based pagination and efficient API key rotation, featuring a modern React frontend with responsive design.
 
 ## Features
 
@@ -10,19 +10,28 @@ A Go-based REST API service that fetches and stores YouTube videos based on sear
 - PostgreSQL database integration
 - RESTful API endpoints
 - Background job for periodic video fetching
+- Responsive React frontend with Tailwind CSS
+- Error handling and loading states
+- Configurable cron schedules for data fetching
+- Optimized database queries and indexing
+- TypeScript for enhanced type safety
+- API response caching support
+- CORS and security configurations
 
 ## Tech Stack
 
+### Backend
 - Go 1.21+
 - Gin Web Framework
 - PostgreSQL
 - YouTube Data API v3
 
-## Prerequisites
+### Frontend
+- React 18+
+- TypeScript
+- Tailwind CSS
+- Vite
 
-- Go 1.21 or higher
-- PostgreSQL
-- YouTube API key(s)
 
 ## Installation
 
@@ -35,6 +44,9 @@ cd go-YTFetch
 2. Install dependencies:
 ```bash
 go mod download
+
+cd frontend
+npm install
 ```
 
 3. Set up environment variables:
@@ -71,6 +83,16 @@ scripts/run.sh
 2. The API will be available at `http://localhost:8080`
 
 ## API Endpoints
+
+### Fetch videos using YT API
+```
+GET /api/fetch
+```
+Query Parameters:
+- `query`: Search query to fetch results
+- `max_results` (optional): Number of results per query
+- `published_after`: Date after which it was published
+
 
 ### Get Videos
 ```
@@ -204,6 +226,15 @@ keyManager, err := utils.NewAPIKeyManager([]string{
 - Constraint choices to maintain data integrity
 
 ## Screenshots
+### First results after fetching from database
+<img width="1280" alt="Screenshot 2024-12-29 at 2 46 12 PM" src="https://github.com/user-attachments/assets/0ab80159-9a91-439b-baa0-3f3ca8a62f9b" />
+
+### Pagination implementation and next results
+<img width="1275" alt="Screenshot 2024-12-29 at 2 45 00 PM" src="https://github.com/user-attachments/assets/cee52e42-b22b-4951-8ba9-b36a8c3fab92" />
+
+### Buttons to navigate pages
+<img width="1280" alt="Screenshot 2024-12-29 at 3 52 15 PM" src="https://github.com/user-attachments/assets/3769eaf5-1a5d-4c27-a6be-340028730365" />
+
 
 ## License
 
