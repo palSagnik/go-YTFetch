@@ -80,7 +80,7 @@ PORT=8080
 scripts/run.sh
 ```
 
-2. The API will be available at `http://localhost:8080`
+2. The Frontend will be available at `http://localhost:5173`
 
 ## API Endpoints
 

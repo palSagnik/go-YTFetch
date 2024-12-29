@@ -113,7 +113,7 @@ func FetchingCronJob() {
 	}
 
 	for {
-		fmt.Printf("### STARTING CRONJOB ###")
+		fmt.Println("### STARTING CRONJOB ###")
 		
 		// added this to prevent apikey quota exhaustion
 		// comment this line while starting the server
