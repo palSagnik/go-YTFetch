@@ -1,6 +1,7 @@
 package cron
 
 import (
+	"context"
 	"fmt"
 	"sync"
 	"time"
@@ -108,29 +109,37 @@ func FetchingCronJob() {
 	// initialising new apikey manager
 	keyManager, err := NewAPIKeyManager(keys)
 	if err != nil {
-		fmt.Println("error in creating ApiKeyManager: %s", err.Error())
+		fmt.Printf("error in creating ApiKeyManager: %s", err.Error())
 	}
 
 	for {
-
-		fmt.Println("### STARTING CRONJOB ###")
+		fmt.Printf("### STARTING CRONJOB ###")
 		
+		// added this to prevent apikey quota exhaustion
+		// comment this line while starting the server
+		time.Sleep(500 * time.Hour)
+
 		apikey, err := keyManager.GetNextKey()
 		if err != nil {
-			fmt.Println("error in getting api key: %s", err.Error())
+			fmt.Printf("error in getting api key: %s", err.Error())
 		}
 
 		for _, query := range queryKeywords {
+			
+			var ctx context.Context
+
 			videos, err := utils.SearchYoutubevideos(apikey, query, config.DEFAULT_PUBLISHED_AFTER, int64(config.DEFAULT_VIDEO_FETCH_LIMIT))
 			if err != nil {
-				fmt.Println("error in fetching videos of query(%s): %s", query, err.Error())
+				fmt.Printf("error in fetching videos of query(%s): %s", query, err.Error())
 			}
 
-			//err = database.InsertVideoDetails(videos, )
+			err = database.InsertVideoDetailsCron(ctx, videos)
+			if err != nil {
+				fmt.Printf("error in inserting videos of query(%s): %s", query, err.Error())
+			}
 		}
+
+		//time.Sleep(time.Hour * 1)
 	}
 
-	
-
-	
 }
