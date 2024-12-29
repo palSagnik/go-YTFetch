@@ -5,7 +5,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/palSagnik/go-YTFetch.git/config"
+	"github.com/palSagnik/go-YTFetch.git/backend/config"
+	"github.com/palSagnik/go-YTFetch.git/backend/database"
+	"github.com/palSagnik/go-YTFetch.git/backend/utils"
 )
 
 type APIKeyManager struct {
@@ -85,6 +87,9 @@ func (m *APIKeyManager) MarkQuotaExceeded(key string) {
 }
 
 func FetchingCronJob() {
+	
+	// predefined search query strings
+	// based on google youtube trends in india
 	queryKeywords := []string{
 		"cricket",
 		"politics",
@@ -93,10 +98,36 @@ func FetchingCronJob() {
 		"music",
 	}
 
+	// apikeys for usage
 	keys := []string{
 		config.YOUTUBE_APIKEY_1,
 		config.YOUTUBE_APIKEY_2,
 		config.YOUTUBE_APIKEY_3,
+	}
+
+	// initialising new apikey manager
+	keyManager, err := NewAPIKeyManager(keys)
+	if err != nil {
+		fmt.Println("error in creating ApiKeyManager: %s", err.Error())
+	}
+
+	for {
+
+		fmt.Println("### STARTING CRONJOB ###")
+		
+		apikey, err := keyManager.GetNextKey()
+		if err != nil {
+			fmt.Println("error in getting api key: %s", err.Error())
+		}
+
+		for _, query := range queryKeywords {
+			videos, err := utils.SearchYoutubevideos(apikey, query, config.DEFAULT_PUBLISHED_AFTER, int64(config.DEFAULT_VIDEO_FETCH_LIMIT))
+			if err != nil {
+				fmt.Println("error in fetching videos of query(%s): %s", query, err.Error())
+			}
+
+			//err = database.InsertVideoDetails(videos, )
+		}
 	}
 
 	

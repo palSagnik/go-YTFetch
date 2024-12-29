@@ -5,10 +5,10 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/palSagnik/go-YTFetch.git/config"
-	"github.com/palSagnik/go-YTFetch.git/database"
-	"github.com/palSagnik/go-YTFetch.git/models"
-	"github.com/palSagnik/go-YTFetch.git/utils"
+	"github.com/palSagnik/go-YTFetch.git/backend/config"
+	"github.com/palSagnik/go-YTFetch.git/backend/database"
+	"github.com/palSagnik/go-YTFetch.git/backend/models"
+	"github.com/palSagnik/go-YTFetch.git/backend/utils"
 )
 
 func YTFetchApi(c *gin.Context) {
@@ -45,6 +45,7 @@ func YTFetchApi(c *gin.Context) {
 
 	// apikey parameter for rotation
 	// if apikey not provided default to APIKEY_3
+	// you can use any apikey which is not being used in rotation for apikeymanager
 	// using 3 here due to shortage of apikeys
 	apiKey := c.Query("api_key")
 	if apiKey == "" {

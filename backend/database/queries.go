@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/palSagnik/go-YTFetch.git/models"
-	"github.com/palSagnik/go-YTFetch.git/utils"
+	"github.com/palSagnik/go-YTFetch.git/backend/models"
+	"github.com/palSagnik/go-YTFetch.git/backend/utils"
 )
 
 

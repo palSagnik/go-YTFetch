@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/palSagnik/go-YTFetch.git/handler"
+	"github.com/palSagnik/go-YTFetch.git/backend/handler"
 )
 
 func SetUpRoutes(r *gin.Engine) {

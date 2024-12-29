@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	_ "github.com/lib/pq"
-	"github.com/palSagnik/go-YTFetch.git/config"
+	"github.com/palSagnik/go-YTFetch.git/backend/config"
 )
 
 var (

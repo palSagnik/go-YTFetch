@@ -8,6 +8,3 @@ go build -o test
 
 echo "Running the project"
 ./test
-
-echo "Deleting the binary"
-rm test

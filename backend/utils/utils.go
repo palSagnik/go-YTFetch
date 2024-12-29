@@ -5,13 +5,13 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/palSagnik/go-YTFetch.git/models"
+	"github.com/palSagnik/go-YTFetch.git/backend/models"
 	"google.golang.org/api/option"
 	"google.golang.org/api/youtube/v3"
 )
 
 func SearchYoutubevideos(apiKey string, query string, publishedAfter string, maxResults int64) ([]models.VideoItem, error) {
-
+	
 	ctx := context.Background()
 	youtube, err := youtube.NewService(ctx, option.WithAPIKey(apiKey))
 	if err != nil {
@@ -25,7 +25,7 @@ func SearchYoutubevideos(apiKey string, query string, publishedAfter string, max
 		Order("date").
 		Type("video").
 		PublishedAfter(publishedAfter)
-		
+
 	// executing the search call
 	resp, err := call.Do()
 	if err != nil {

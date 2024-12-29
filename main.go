@@ -5,13 +5,14 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/palSagnik/go-YTFetch.git/config"
-	"github.com/palSagnik/go-YTFetch.git/database"
-	"github.com/palSagnik/go-YTFetch.git/routes"
+	"github.com/palSagnik/go-YTFetch.git/backend/config"
+	"github.com/palSagnik/go-YTFetch.git/backend/database"
+	"github.com/palSagnik/go-YTFetch.git/backend/routes"
 )
 
 func main() {
-	
+
+
 	// loop till database is initialised
 	for {
 		if err := database.ConnectDB(); err != nil {
