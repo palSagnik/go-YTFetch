@@ -1,3 +1,6 @@
+## For the Hiring Team
+I have mailed the my `.env` file in the mail, kindly use it for testing.
+
 # go-YTFetch
 
 A Go-based REST API service that fetches and stores YouTube videos based on search queries. The service implements cursor-based pagination and efficient API key rotation, featuring a modern React frontend with responsive design.
